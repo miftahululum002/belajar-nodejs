@@ -1,6 +1,11 @@
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const { loadContact, findContact, saveContact } = require("./utils/contacts");
+const { body, validationResult, check } = require("express-validator");
+const cookieParser = require("cookie-parser");
+const flash = require("connect-flash");
+const session = require("express-session");
+
 const app = express();
 const port = 3000;
 const path = require("path");
@@ -9,6 +14,10 @@ app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser("secret"));
+app.use(session());
+app.use(flash());
 app.get("/", (req, res) => {
   const mahasiswa = [
     {
