@@ -8,8 +8,7 @@ const path = require("path");
 app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.use(express.static("public"));
-// app.use('/static', express.static(path.join(__dirname, 'public')))
-
+app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   const mahasiswa = [
     {
@@ -44,6 +43,12 @@ app.get("/contact", (req, res) => {
     layout: "layouts/app",
     title: "Contact",
     contacts,
+  });
+});
+app.get("/contact/add", (req, res) => {
+  res.render("contact-add", {
+    layout: "layouts/app",
+    title: "Contact Add",
   });
 });
 app.get("/contact/:id", (req, res) => {
