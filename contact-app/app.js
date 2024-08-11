@@ -1,6 +1,6 @@
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
-const { loadContact, findContact } = require("./utils/contacts");
+const { loadContact, findContact, saveContact } = require("./utils/contacts");
 const app = express();
 const port = 3000;
 const path = require("path");
@@ -50,6 +50,10 @@ app.get("/contact/add", (req, res) => {
     layout: "layouts/app",
     title: "Contact Add",
   });
+});
+app.post("/contact", (req, res) => {
+  saveContact(req.body);
+  res.redirect("/contact");
 });
 app.get("/contact/:id", (req, res) => {
   const contact = findContact(req.params.id);

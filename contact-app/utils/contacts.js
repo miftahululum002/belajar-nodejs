@@ -19,4 +19,17 @@ const findContact = (id) => {
   const contact = contacts.find((contact) => contact.id == id);
   return contact;
 };
-module.exports = { loadContact, findContact };
+
+const saveContact = (contact) => {
+  const contacts = loadContact();
+  // tambahkan id pada object
+  contact.id = Date.now();
+  contacts.push(contact);
+  saveContacts(contacts);
+};
+
+const saveContacts = (contacts) => {
+  fs.writeFileSync("./data/contacts.json", JSON.stringify(contacts));
+};
+
+module.exports = { loadContact, findContact, saveContact };
