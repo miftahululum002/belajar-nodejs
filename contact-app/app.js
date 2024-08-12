@@ -16,7 +16,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser("secret"));
-app.use(session());
+app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
 app.get("/", (req, res) => {
   const mahasiswa = [
