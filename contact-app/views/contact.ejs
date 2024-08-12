@@ -3,6 +3,12 @@
     <a href="/contact/add" class="btn btn-primary btn-sm rounded-0 mb-2"
       >Tambah Contact</a
     >
+    <% if(message) { %>
+    <div class="alert alert-danger fw-bold" role="alert">
+      Data contact tidak ada<br />
+      <a href="/contact" class="alert-link fw-light">&laquo; Kembali</a>
+    </div>
+    <% } %>
     <table class="table table-bordered">
       <thead>
         <tr>
