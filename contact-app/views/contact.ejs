@@ -3,6 +3,11 @@
     <a href="/contact/add" class="btn btn-primary btn-sm rounded-0 mb-2"
       >Tambah Contact</a
     >
+    <% if (msg.length !==0) { %>
+    <div class="alert alert-success" role="alert"><%=msg %></div>
+    <% } %> <% if (error.length !==0) { %>
+    <div class="alert alert-danger" role="alert"><%=error %></div>
+    <% } %>
     <table class="table table-bordered">
       <thead>
         <tr>

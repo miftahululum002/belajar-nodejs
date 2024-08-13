@@ -32,4 +32,25 @@ const saveContacts = (contacts) => {
   fs.writeFileSync("./data/contacts.json", JSON.stringify(contacts));
 };
 
-module.exports = { loadContact, findContact, saveContact };
+const deleteContact = (id) => {
+  const contacts = loadContact();
+  const filteredContacts = contacts.filter(
+    (contact) => contact.id !== Number(id)
+  );
+  saveContacts(filteredContacts);
+};
+
+const updateContact = (id, contact) => {
+  contact.id = id;
+  const contacts = loadContact();
+  let newData = contacts.filter((kon) => kon.id !== id);
+  newData.push(contact);
+  saveContacts(newData);
+};
+module.exports = {
+  loadContact,
+  findContact,
+  saveContact,
+  deleteContact,
+  updateContact,
+};
