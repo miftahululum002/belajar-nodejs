@@ -10,7 +10,7 @@ if (!fs.existsSync(dataPath)) {
 }
 
 const loadContact = () => {
-  const fileBuffer = fs.readFileSync("./data/contacts.json", "utf-8");
+  const fileBuffer = fs.readFileSync(dataPath, "utf-8");
   const contacts = JSON.parse(fileBuffer);
   return contacts;
 };
@@ -29,7 +29,7 @@ const saveContact = (contact) => {
 };
 
 const saveContacts = (contacts) => {
-  fs.writeFileSync("./data/contacts.json", JSON.stringify(contacts));
+  fs.writeFileSync(dataPath, JSON.stringify(contacts));
 };
 
 const deleteContact = (id) => {
