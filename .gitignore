@@ -1,5 +1,5 @@
 node_modules
 package-lock.json
 .DS_Store
-contact-app/data/contacts.json
-contact-app/data/products.json
+miftahul-app/data/contacts.json
+miftahul-app/data/products.json
