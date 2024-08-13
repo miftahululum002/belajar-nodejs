@@ -75,17 +75,6 @@ app.get("/contact/add", (req, res) => {
     error: req.flash("error"),
   });
 });
-// app.get("/contact/delete/:id", async (req, res) => {
-//   const contact = await Contact.findOne({ _id: req.params.id });
-//   if (!contact) {
-//     req.flash("error", "Data contact tidak ditemukan");
-//     return res.redirect("/contact");
-//   }
-//   await Contact.deleteOne({ _id: req.params.id }).then((result) => {
-//     req.flash("msg", "Data contact berhasil dihapus");
-//     res.redirect("/contact");
-//   });
-// });
 app.delete("/contact", async (req, res) => {
   const contact = await Contact.findOne({ _id: req.body.id });
   if (!contact) {
