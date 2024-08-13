@@ -61,7 +61,7 @@ app.get("/contact", async (req, res) => {
   const contacts = await Contact.find();
   res.render("contact", {
     layout: "layouts/app",
-    title: "Contact",
+    title: "Contacts",
     contacts,
     msg: req.flash("msg"),
     error: req.flash("error"),
@@ -70,7 +70,7 @@ app.get("/contact", async (req, res) => {
 app.get("/contact/add", (req, res) => {
   res.render("contact-add", {
     layout: "layouts/app",
-    title: "Contact Add",
+    title: "Tambah Contact",
     error: req.flash("error"),
   });
 });
@@ -89,7 +89,7 @@ app.get("/contact/edit/:id", async (req, res) => {
   const contact = await Contact.findOne({ _id: req.params.id });
   res.render("contact-edit", {
     layout: "layouts/app",
-    title: "Contact Edit",
+    title: "Edit Contact",
     contact,
     error: req.flash("error"),
   });
@@ -144,7 +144,7 @@ app.get("/contact/:id", async (req, res) => {
   const contact = await Contact.findOne({ _id: req.params.id });
   res.render("contact-detail", {
     layout: "layouts/app",
-    title: "Contact Detail",
+    title: "Detail Contact",
     contact,
   });
 });

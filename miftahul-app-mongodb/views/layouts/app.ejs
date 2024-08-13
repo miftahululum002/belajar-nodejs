@@ -8,7 +8,10 @@
   </head>
   <body>
     <%- include('nav')%>
-    <div class="container"><%- body %></div>
+    <div class="container">
+      <h2><%=title%></h2>
+      <%- body %>
+    </div>
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
