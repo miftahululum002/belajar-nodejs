@@ -5,8 +5,8 @@
       <% if (error.length !== 0) { %>
       <div class="alert alert-danger" role="alert"><%=error %></div>
       <% } %>
-      <form action="/product/update" method="post">
-        <input type="hidden" name="id" id="id" value="<%=data.id%>" />
+      <form action="/product?_method=put" method="post">
+        <input type="hidden" name="_id" id="_id" value="<%=data._id%>" />
         <div class="mb-3">
           <label for="name">Kode</label>
           <input

@@ -20,12 +20,15 @@
             <a href="/product/edit/<%=data.id%>" class="btn btn-info badge"
               >Ubah</a
             >
-            <a
-              href="/product/delete/<%=data.id%>"
-              class="btn btn-danger badge"
-              onclick="return confirm('Apakah Anda yakin menghapus data?')"
-              >Delete</a
+
+            <form
+              action="/product?_method=delete"
+              class="d-inline"
+              method="post"
             >
+              <input type="hidden" name="_id" id="_id" value="<%=data._id%>" />
+              <button type="submit" class="btn btn-danger badge">Hapus</button>
+            </form>
           </div>
           <a class="card-link" href="/product">&laquo; Kembali</a>
         </div>

@@ -3,7 +3,8 @@ const expressLayouts = require("express-ejs-layouts");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 require("./utils/db");
-const Contact = require("./model/Contact");
+const Contact = require("./model/contact");
+const Product = require("./model/product");
 const { body, validationResult, check } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
@@ -12,8 +13,6 @@ const session = require("express-session");
 const app = express();
 const port = 3000;
 const path = require("path");
-const { error } = require("console");
-const { name } = require("ejs");
 app.use(methodOverride("_method"));
 app.set("view engine", "ejs");
 app.use(expressLayouts);
@@ -150,8 +149,8 @@ app.get("/contact/:id", async (req, res) => {
   });
 });
 
-app.get("/product", (req, res) => {
-  const products = loadProducts();
+app.get("/product", async (req, res) => {
+  const products = await Product.find();
   res.render("product", {
     layout: "layouts/app",
     title: "Products",
@@ -160,16 +159,29 @@ app.get("/product", (req, res) => {
   });
 });
 
-app.post("/product", (req, res) => {
-  const cek = cekKodeDuplikat(req.body.code);
-  if (cek) {
-    req.flash("error", "Kode sudah digunakan");
-    return res.redirect("/product/add");
+app.post(
+  "/product",
+  [
+    body("code").custom(async (value) => {
+      const cek = await Product.findOne({ code: value });
+      if (cek) {
+        throw new Error("Kode sudah digunakan");
+      }
+      return true;
+    }),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      req.flash("error", errors.array());
+      return res.redirect("/product/add");
+    }
+    await Product.insertMany(req.body).then((error, result) => {
+      req.flash("msg", "Data berhasil disimpan");
+      return res.redirect("/product");
+    });
   }
-  saveProduct(req.body);
-  req.flash("msg", "Data berhasil disimpan");
-  return res.redirect("/product");
-});
+);
 
 app.get("/product/add", (req, res) => {
   res.render("product-add", {
@@ -178,18 +190,19 @@ app.get("/product/add", (req, res) => {
     error: req.flash("error"),
   });
 });
-app.get("/product/delete/:id", (req, res) => {
-  const product = findProduct(req.params.id);
+app.delete("/product", async (req, res) => {
+  const product = await Product.findOne({ _id: req.body._id });
   if (!product) {
     req.flash("error", "Data product tidak ditemukan");
     return res.redirect("/product");
   }
-  deleteProduct(req.params.id);
-  req.flash("msg", "Data berhasil dihapus");
-  return res.redirect("/product");
+  await Product.deleteOne({ _id: req.body._id }).then((result) => {
+    req.flash("msg", "Data berhasil dihapus");
+    return res.redirect("/product");
+  });
 });
-app.get("/product/:id", (req, res) => {
-  const data = findProduct(req.params.id);
+app.get("/product/:id", async (req, res) => {
+  const data = await Product.findOne({ _id: req.params.id });
   res.render("product-detail", {
     layout: "layouts/app",
     title: "Detail Product",
@@ -198,8 +211,8 @@ app.get("/product/:id", (req, res) => {
   });
 });
 
-app.get("/product/edit/:id", (req, res) => {
-  const data = findProduct(req.params.id);
+app.get("/product/edit/:id", async (req, res) => {
+  const data = await Product.findOne({ _id: req.params.id });
   res.render("product-edit", {
     layout: "layouts/app",
     title: "Edit Product",
@@ -207,16 +220,39 @@ app.get("/product/edit/:id", (req, res) => {
     error: req.flash("error"),
   });
 });
-app.post("/product/update", (req, res) => {
-  const cek = cekKodeDuplikat(req.body.code);
-  if (cek && cek.id != req.body.id) {
-    req.flash("error", "Kode sudah digunakan");
-    return res.redirect(`/product/edit/${req.body.id}`);
+app.put(
+  "/product",
+  [
+    body("code").custom(async (value, { req }) => {
+      const cek = await Product.findOne({ code: value });
+      if (cek && req.body._id != cek._id) {
+        throw new Error("Kode sudah digunakan");
+      }
+      return true;
+    }),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      req.flash("error", errors.array());
+      return res.redirect(`/product/edit/${req.body._id}`);
+    }
+    await Product.updateOne(
+      { _id: req.body._id },
+      {
+        $set: {
+          code: req.body.code,
+          name: req.body.name,
+          price: req.body.price,
+          description: req.body.description,
+        },
+      }
+    ).then((error, result) => {
+      req.flash("msg", "Data berhasil disimpan");
+      return res.redirect("/product");
+    });
   }
-  updateProduct(req.body.id, req.body);
-  req.flash("msg", "Data berhasil disimpan");
-  return res.redirect("/product");
-});
+);
 app.use("/", (req, res) => {
   res.status(404);
   res.send("404 Not Found");
