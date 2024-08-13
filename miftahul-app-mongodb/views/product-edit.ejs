@@ -1,0 +1,62 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Form Data Product</h3>
+      <% if (error.length !== 0) { %>
+      <div class="alert alert-danger" role="alert"><%=error %></div>
+      <% } %>
+      <form action="/product/update" method="post">
+        <input type="hidden" name="id" id="id" value="<%=data.id%>" />
+        <div class="mb-3">
+          <label for="name">Kode</label>
+          <input
+            type="text"
+            name="code"
+            id="code"
+            class="form-control"
+            placeholder="Kode"
+            required
+            value="<%=data.code%>"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="name">Nama</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            class="form-control"
+            placeholder="Nama"
+            required
+            value="<%=data.name%>"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="price">Harga</label>
+          <input
+            type="number"
+            id="price"
+            name="price"
+            placeholder="Harga"
+            class="form-control"
+            value="<%=data.price%>"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="description">Deskripsi</label>
+          <textarea
+            class="form-control"
+            name="description"
+            id="description"
+            placeholder="Deskripsi"
+          >
+<%=data.description%></textarea
+          >
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm rounded-0">
+          Simpan
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

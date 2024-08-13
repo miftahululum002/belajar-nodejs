@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Form Data Product</h3>
+      <% if (error.length !== 0) { %>
+      <div class="alert alert-danger" role="alert"><%=error %></div>
+      <% } %>
+      <form action="/product" method="post">
+        <div class="mb-3">
+          <label for="name">Kode</label>
+          <input
+            type="text"
+            name="code"
+            id="code"
+            class="form-control"
+            placeholder="Kode"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="name">Nama</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            class="form-control"
+            placeholder="Nama"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="price">Harga</label>
+          <input
+            type="number"
+            id="price"
+            name="price"
+            placeholder="Harga"
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="description">Deskripsi</label>
+          <textarea
+            class="form-control"
+            name="description"
+            id="description"
+            placeholder="Deskripsi"
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm rounded-0">
+          Simpan
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
