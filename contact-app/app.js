@@ -8,6 +8,7 @@ const {
   updateContact,
 } = require("./utils/contacts");
 
+const { loadProducts } = require("./utils/products");
 const { body, validationResult, check } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
@@ -137,6 +138,22 @@ app.get("/contact/:id", (req, res) => {
     layout: "layouts/app",
     title: "Contact Detail",
     contact,
+  });
+});
+
+app.get("/product", (req, res) => {
+  const products = loadProducts();
+  res.render("product", {
+    layout: "layouts/app",
+    title: "Products",
+    products,
+  });
+});
+
+app.get("/product/add", (req, res) => {
+  res.render("product-add", {
+    layout: "layouts/app",
+    title: "Tambah Product",
   });
 });
 
