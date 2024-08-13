@@ -5,7 +5,8 @@
       <% if (error.length !== 0) { %>
       <div class="alert alert-danger" role="alert"><%=error %></div>
       <% } %>
-      <form action="/product" method="post">
+      <form action="/product/update" method="post">
+        <input type="hidden" name="id" id="id" value="<%=data.id%>" />
         <div class="mb-3">
           <label for="name">Kode</label>
           <input
@@ -15,6 +16,7 @@
             class="form-control"
             placeholder="Kode"
             required
+            value="<%=data.code%>"
           />
         </div>
         <div class="mb-3">
@@ -26,6 +28,7 @@
             class="form-control"
             placeholder="Nama"
             required
+            value="<%=data.name%>"
           />
         </div>
         <div class="mb-3">
@@ -36,6 +39,7 @@
             name="price"
             placeholder="Harga"
             class="form-control"
+            value="<%=data.price%>"
           />
         </div>
         <div class="mb-3">
@@ -45,7 +49,9 @@
             name="description"
             id="description"
             placeholder="Deskripsi"
-          ></textarea>
+          >
+<%=data.description%></textarea
+          >
         </div>
         <button type="submit" class="btn btn-primary btn-sm rounded-0">
           Simpan

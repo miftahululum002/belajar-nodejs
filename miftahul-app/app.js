@@ -8,7 +8,14 @@ const {
   updateContact,
 } = require("./utils/contacts");
 
-const { loadProducts } = require("./utils/products");
+const {
+  loadProducts,
+  findProduct,
+  cekKodeDuplikat,
+  saveProduct,
+  updateProduct,
+  deleteProduct,
+} = require("./utils/products");
 const { body, validationResult, check } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
@@ -147,16 +154,67 @@ app.get("/product", (req, res) => {
     layout: "layouts/app",
     title: "Products",
     products,
+    msg: req.flash("msg"),
   });
+});
+
+app.post("/product", (req, res) => {
+  const cek = cekKodeDuplikat(req.body.code);
+  if (cek) {
+    req.flash("error", "Kode sudah digunakan");
+    return res.redirect("/product/add");
+  }
+  saveProduct(req.body);
+  req.flash("msg", "Data berhasil disimpan");
+  return res.redirect("/product");
 });
 
 app.get("/product/add", (req, res) => {
   res.render("product-add", {
     layout: "layouts/app",
     title: "Tambah Product",
+    error: req.flash("error"),
+  });
+});
+app.get("/product/delete/:id", (req, res) => {
+  const product = findProduct(req.params.id);
+  if (!product) {
+    req.flash("error", "Data product tidak ditemukan");
+    return res.redirect("/product");
+  }
+  deleteProduct(req.params.id);
+  req.flash("msg", "Data berhasil dihapus");
+  return res.redirect("/product");
+});
+app.get("/product/:id", (req, res) => {
+  const data = findProduct(req.params.id);
+  res.render("product-detail", {
+    layout: "layouts/app",
+    title: "Detail Product",
+    data: data,
+    error: req.flash("error"),
   });
 });
 
+app.get("/product/edit/:id", (req, res) => {
+  const data = findProduct(req.params.id);
+  res.render("product-edit", {
+    layout: "layouts/app",
+    title: "Edit Product",
+    data: data,
+    error: req.flash("error"),
+  });
+});
+app.post("/product/update", (req, res) => {
+  const cek = cekKodeDuplikat(req.body.code);
+  if (cek && cek.id != req.body.id) {
+    req.flash("error", "Kode sudah digunakan");
+    return res.redirect(`/product/edit/${req.body.id}`);
+  }
+  updateProduct(req.body.id, req.body);
+  req.flash("msg", "Data berhasil disimpan");
+  return res.redirect("/product");
+});
 app.use("/", (req, res) => {
   res.status(404);
   res.send("404 Not Found");

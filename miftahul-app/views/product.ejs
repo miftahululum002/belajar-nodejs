@@ -3,12 +3,17 @@
     <a href="/product/add" class="btn btn-primary btn-sm rounded-0 mb-2"
       >Tambah Data</a
     >
+    <% if (msg.length !==0) { %>
+    <div class="alert alert-success" role="alert"><%=msg %></div>
+    <% } %>
     <table class="table table-bordered">
       <thead>
         <tr>
           <th>No</th>
+          <th>Kode</th>
           <th>Nama</th>
-          <th>No HP</th>
+          <th>Harga</th>
+          <th>Deskripsi</th>
           <th>Opsi</th>
         </tr>
       </thead>
@@ -21,14 +26,16 @@
             </div>
           </td>
         </tr>
-        <% }else{ %> <% products.forEach((contact,i) => { %>
+        <% }else{ %> <% products.forEach((product,i) => { %>
         <tr>
           <td><%=(i+1)%></td>
-          <td><%=contact.name %></td>
-          <td><%=contact.nohp %></td>
+          <td><%=product.code %></td>
+          <td><%=product.name %></td>
+          <td><%=product.price %></td>
+          <td><%=product.description %></td>
           <td>
             <a
-              href="/contact/<%=contact.id%>"
+              href="/product/<%=product.id%>"
               class="btn btn-primary badge rounded-pill"
               >Detail</a
             >
