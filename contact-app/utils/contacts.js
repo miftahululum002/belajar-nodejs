@@ -4,7 +4,7 @@ const dataDir = "./data";
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir);
 }
-const dataPath = "./data/contacts.json";
+const dataPath = dataDir + "/contacts.json";
 if (!fs.existsSync(dataPath)) {
   fs.writeFileSync(dataPath, "[]", "utf-8");
 }
