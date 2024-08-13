@@ -1,21 +1,25 @@
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
-const {
-  loadContact,
-  findContact,
-  saveContact,
-  deleteContact,
-  updateContact,
-} = require("./utils/contacts");
+const mongoose = require("mongoose");
+const methodOverride = require("method-override");
+require("./utils/db");
+const Contact = require("./model/Contact");
+// const {
+//   loadContact,
+//   findContact,
+//   saveContact,
+//   deleteContact,
+//   updateContact,
+// } = require("./utils/contacts");
 
-const {
-  loadProducts,
-  findProduct,
-  cekKodeDuplikat,
-  saveProduct,
-  updateProduct,
-  deleteProduct,
-} = require("./utils/products");
+// const {
+//   loadProducts,
+//   findProduct,
+//   cekKodeDuplikat,
+//   saveProduct,
+//   updateProduct,
+//   deleteProduct,
+// } = require("./utils/products");
 const { body, validationResult, check } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
@@ -24,7 +28,9 @@ const session = require("express-session");
 const app = express();
 const port = 3000;
 const path = require("path");
-
+const { error } = require("console");
+const { name } = require("ejs");
+app.use(methodOverride("_method"));
 app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.use(express.static("public"));
@@ -68,8 +74,8 @@ app.get("/about", (req, res) => {
     title: "About",
   });
 });
-app.get("/contact", (req, res) => {
-  const contacts = loadContact();
+app.get("/contact", async (req, res) => {
+  const contacts = await Contact.find();
   res.render("contact", {
     layout: "layouts/app",
     title: "Contact",
@@ -85,18 +91,30 @@ app.get("/contact/add", (req, res) => {
     error: req.flash("error"),
   });
 });
-app.get("/contact/delete/:id", (req, res) => {
-  const contact = findContact(req.params.id);
+// app.get("/contact/delete/:id", async (req, res) => {
+//   const contact = await Contact.findOne({ _id: req.params.id });
+//   if (!contact) {
+//     req.flash("error", "Data contact tidak ditemukan");
+//     return res.redirect("/contact");
+//   }
+//   await Contact.deleteOne({ _id: req.params.id }).then((result) => {
+//     req.flash("msg", "Data contact berhasil dihapus");
+//     res.redirect("/contact");
+//   });
+// });
+app.delete("/contact", async (req, res) => {
+  const contact = await Contact.findOne({ _id: req.body.id });
   if (!contact) {
     req.flash("error", "Data contact tidak ditemukan");
     return res.redirect("/contact");
   }
-  deleteContact(req.params.id);
-  req.flash("msg", "Data contact berhasil dihapus");
-  res.redirect("/contact");
+  await Contact.deleteOne({ _id: req.body.id }).then((result) => {
+    req.flash("msg", "Data contact berhasil dihapus");
+    res.redirect("/contact");
+  });
 });
-app.get("/contact/edit/:id", (req, res) => {
-  const contact = findContact(req.params.id);
+app.get("/contact/edit/:id", async (req, res) => {
+  const contact = await Contact.findOne({ _id: req.params.id });
   res.render("contact-edit", {
     layout: "layouts/app",
     title: "Contact Edit",
@@ -104,22 +122,33 @@ app.get("/contact/edit/:id", (req, res) => {
     error: req.flash("error"),
   });
 });
-app.post(
-  "/contact/update",
+app.put(
+  "/contact",
   [
     check("email", "Email tidak valid").isEmail(),
     check("nohp", "No HP tidak valid").isMobilePhone("id-ID"),
   ],
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       req.flash("error", errors.array());
       return res.redirect(`/contact/edit/${req.body.id}`);
     }
     const id = req.body.id;
-    updateContact(id, req.body);
-    req.flash("msg", "Data contact berhasil disimpan");
-    res.redirect("/contact");
+
+    await Contact.updateOne(
+      { _id: req.body._id },
+      {
+        $set: {
+          name: req.body.name,
+          nohp: req.body.nohp,
+          email: req.body.email,
+        },
+      }
+    ).then((error, result) => {
+      req.flash("msg", "Data contact berhasil disimpan");
+      res.redirect("/contact");
+    });
   }
 );
 app.post(
@@ -134,13 +163,13 @@ app.post(
       req.flash("error", errors.array());
       return res.redirect("/contact/add");
     }
-    saveContact(req.body);
+    Contact.insertMany(req.body);
     req.flash("msg", "Data berhasil disimpan");
     res.redirect("/contact");
   }
 );
-app.get("/contact/:id", (req, res) => {
-  const contact = findContact(req.params.id);
+app.get("/contact/:id", async (req, res) => {
+  const contact = await Contact.findOne({ _id: req.params.id });
   res.render("contact-detail", {
     layout: "layouts/app",
     title: "Contact Detail",

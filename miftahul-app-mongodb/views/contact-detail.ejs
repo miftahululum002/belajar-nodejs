@@ -17,12 +17,26 @@
             <a href="/contact/edit/<%=contact.id%>" class="btn btn-info badge"
               >Ubah</a
             >
-            <a
+            <!-- <a
               href="/contact/delete/<%=contact.id%>"
               class="btn btn-danger badge"
               onclick="return confirm('Apakah Anda yakin menghapus data?')"
               >Delete</a
+            > -->
+            <form
+              class="d-inline"
+              method="POST"
+              action="/contact?_method=DELETE"
             >
+              <input type="hidden" name="id" id="id" value="<%=contact._id%>" />
+              <button
+                type="submit"
+                onclick="return confirm('Apakah Anda yakin menghapus data?')"
+                class="btn btn-danger badge"
+              >
+                Hapus
+              </button>
+            </form>
           </div>
 
           <a class="card-link" href="/contact">&laquo; Kembali</a>
