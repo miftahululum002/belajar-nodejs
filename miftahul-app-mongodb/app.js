@@ -4,22 +4,6 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 require("./utils/db");
 const Contact = require("./model/Contact");
-// const {
-//   loadContact,
-//   findContact,
-//   saveContact,
-//   deleteContact,
-//   updateContact,
-// } = require("./utils/contacts");
-
-// const {
-//   loadProducts,
-//   findProduct,
-//   cekKodeDuplikat,
-//   saveProduct,
-//   updateProduct,
-//   deleteProduct,
-// } = require("./utils/products");
 const { body, validationResult, check } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
