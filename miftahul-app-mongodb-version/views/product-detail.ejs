@@ -1,0 +1,38 @@
+<div class="mt-3">
+  <div class="row">
+    <div class="col-md-8">
+      <% if (!data) { %>
+      <div class="alert alert-danger fw-bold" role="alert">
+        Data product tidak ditemukan<br />
+        <a href="/product" class="alert-link fw-light">&laquo; Kembali</a>
+      </div>
+      <% }else{ %>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><%= data.name %></h5>
+          <h6 class="card-subtitle mb-2 text-muted"><%=data.code%></h6>
+          <p class="card-text">
+            <%=data.price%><br />
+            <%=data.description%>
+          </p>
+          <div>
+            <a href="/product/edit/<%=data.id%>" class="btn btn-info badge"
+              >Ubah</a
+            >
+
+            <form
+              action="/product?_method=delete"
+              class="d-inline"
+              method="post"
+            >
+              <input type="hidden" name="_id" id="_id" value="<%=data._id%>" />
+              <button type="submit" class="btn btn-danger badge">Hapus</button>
+            </form>
+          </div>
+          <a class="card-link" href="/product">&laquo; Kembali</a>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
